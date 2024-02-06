@@ -1,0 +1,18 @@
+# Environment variables
+.env
+.env.*
+!.env.example  # Don't ignore .env.example as it's usually used for reference
+
+# Database files
+*.db
+*.sql
+*.sqlite
+
+.vscode
+# Other files and directories to ignore
+node_modules/
+/dist
+/build
+/logs
+*.log
+.DS_Store  # Ignore MacOS directory metadata
