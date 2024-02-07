@@ -95,6 +95,22 @@ async def register_user(user_data: userCreate):
     new_user = create_user(user_data)
     return new_user
 
+@app.get("/user/getdetails", response_model=userResponse)
+async def get_user_details(token: str = Depends(oauth2_scheme)):
+    username = verify_token(
+        token,
+        credentials_exception=HTTPException(
+            status_code=401,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        ),
+    )
+    user = await get_user_by_username(username)
+    if user:
+        return user
+    else:
+        raise HTTPException(status_code=404, detail=f"user id with {user.id} not found")
+    
 
 @app.delete("/user/{user_id}")
 async def remove_user(user_id: int, token: str = Depends(oauth2_scheme)):
