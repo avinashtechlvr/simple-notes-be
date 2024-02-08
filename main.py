@@ -25,8 +25,8 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 # Configure CORS
 origins = [
-    "http://localhost:4321",  # The origin(s) that should be allowed to access the server
-    # You can add more origins as needed, or use "*" to allow all origins
+    "http://localhost:4321",  
+    "simple-notes-ui.pages.dev",
 ]
 
 app.add_middleware(
