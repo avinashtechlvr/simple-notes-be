@@ -48,16 +48,16 @@ origins = [
     "simple-notes-ui.pages.dev",
 ]
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=origins,
-#     allow_credentials=True,
-#     allow_methods=[
-#         "*"
-#     ],  # Allow all methods or specify specific ones ["GET", "POST", ...]
-#     allow_headers=["*"],  # Allow all headers or specify specific ones
-# )
-app.add_middleware(CustomCORSMiddleware);
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=[
+        "*"
+    ],  # Allow all methods or specify specific ones ["GET", "POST", ...]
+    allow_headers=["*"],  # Allow all headers or specify specific ones
+)
+# app.add_middleware(CustomCORSMiddleware)
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
