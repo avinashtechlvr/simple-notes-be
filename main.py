@@ -3,6 +3,9 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import time
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import Response
+import re
 
 from models import User, Note
 from db import (
@@ -18,6 +21,22 @@ from db import (
 )
 from manage import create_access_token, verify_token, authenticate_user
 
+
+class CustomCORSMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        origin = request.headers.get('Origin')
+        if origin and re.match(r"https://[\w-]+\.simple-notes-ui\.pages\.dev", origin):
+            response.headers['Access-Control-Allow-Origin'] = origin
+            response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+            response.headers['Access-Control-Allow-Headers'] = 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization'
+            response.headers['Access-Control-Allow-Credentials'] = 'true'
+            if request.method == "OPTIONS":
+                # For preflight requests, we can send an empty response since the real request will follow.
+                return Response(status_code=204, headers=dict(response.headers))
+        return response
+
+
 app = FastAPI()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -29,15 +48,15 @@ origins = [
     "simple-notes-ui.pages.dev",
 ]
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=[
-        "*"
-    ],  # Allow all methods or specify specific ones ["GET", "POST", ...]
-    allow_headers=["*"],  # Allow all headers or specify specific ones
-)
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=origins,
+#     allow_credentials=True,
+#     allow_methods=[
+#         "*"
+#     ],  # Allow all methods or specify specific ones ["GET", "POST", ...]
+#     allow_headers=["*"],  # Allow all headers or specify specific ones
+# )
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
