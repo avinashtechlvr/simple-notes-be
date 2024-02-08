@@ -57,6 +57,7 @@ origins = [
 #     ],  # Allow all methods or specify specific ones ["GET", "POST", ...]
 #     allow_headers=["*"],  # Allow all headers or specify specific ones
 # )
+app.add_middleware(CustomCORSMiddleware);
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
