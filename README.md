@@ -21,7 +21,7 @@ The front end of Simple Notes is crafted using Astro.js integrated with React.js
    ```
 
 📦 **Install dependencies:**
-   - For the front end:
+   - For the back end:
      ```bash
      cd simple-notes-be
      pip install -r requirements.txt
